@@ -1,0 +1,44 @@
+image: rust:latest
+
+variables:
+  DEBIAN_FRONTEND: "noninteractive"
+  CARGO_TERM_COLOR: always
+  CARGO_HOME: "$CI_PROJECT_DIR/.cargo"
+
+default:
+  timeout: 60m
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y --no-install-recommends \
+        cmake gcc clang libclang-dev pkg-config libssl-dev ca-certificates
+    - rustc --version && cargo --version
+
+stages:
+  - check
+  - test
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .cargo/registry/
+    - .cargo/git/
+    - target/
+
+# ── Check ─────────────────────────────────────────────────────────────────────
+fmt:
+  stage: check
+  script:
+    - rustup component add rustfmt
+    - cargo fmt --all -- --check
+
+clippy:
+  stage: check
+  script:
+    - rustup component add clippy
+    - cargo clippy --all -- -D warnings
+
+# ── Test ──────────────────────────────────────────────────────────────────────
+test:
+  stage: test
+  script:
+    - cargo test --all --verbose
