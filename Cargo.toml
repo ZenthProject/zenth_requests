@@ -24,7 +24,7 @@ tor-rtcompat = { version = "0.36.0", default-features = false, features = ["toki
 url = "2.5.7"
 
 # Lokinet/Session crypto - utilise zenth_crypto pour toutes les primitives
-zenth_crypto = { path = "../zenth_crate_crypto" }
+zenth_crypto = { path = "http://github.com/ZenthProject/zenth_crypto.git" }
 rand = "0.8"
 hex = "0.4"
 base64 = "0.22"
